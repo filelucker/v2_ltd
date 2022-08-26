@@ -9,13 +9,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvQ1, tvQ2, tvQ3;
     RadioGroup rgp;
     EditText et3;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
         tvQ3 = new TextView(this);
         rgp = new RadioGroup(this);
         et3 = new EditText(this);
+
         rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
             }
         });
+
+
+        spinner = new Spinner(this);
 
 
         if (isNetworkConnected()) {
@@ -126,6 +134,20 @@ public class MainActivity extends AppCompatActivity {
                         params.setMargins(10, 10, 10, 0);
                         tvQ3.setLayoutParams(params);
                         linearLayout.addView(tvQ3);
+
+                        ArrayList<String> stringList = new ArrayList<String>();
+                        for (int i = 0; i < data.get(2).getOptionsList().size(); i++) {
+                            stringList.add(data.get(2).getOptionsList().get(i).getValue());
+                        }
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String> (context,android.R.layout.simple_spinner_dropdown_item,stringList);
+                        adapter.setDropDownViewResource(
+                                android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+                        params.setMargins(10, 10, 10, 0);
+                        spinner.setLayoutParams(params);
+                        linearLayout.addView(spinner);
+
+
                     }
 
 
