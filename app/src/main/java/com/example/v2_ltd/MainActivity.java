@@ -10,9 +10,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.v2_ltd.api.GetService;
 import com.example.v2_ltd.api.RetrofitClient;
+import com.example.v2_ltd.database.AppDatabase;
 import com.example.v2_ltd.model.ResponseData;
 import com.example.v2_ltd.sync.DataLoaderCallback;
 import com.google.gson.Gson;
@@ -41,21 +45,29 @@ public class MainActivity extends AppCompatActivity {
 
     List<ResponseData> data = null;
     LinearLayout linearLayout;
-    TextView tvQ1, tvQ2, tvQ3;
+    TextView tvQ1, tvQ2, tvQ3, tvQ4, tvQ5;
     RadioGroup rgp;
-    EditText et3;
+    EditText et3, et5;
     Spinner spinner;
+    Button btnSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppDatabase.getInstance(this);
+
         linearLayout = (LinearLayout) findViewById(R.id.layout);
         tvQ1 = new TextView(this);
         tvQ2 = new TextView(this);
         tvQ3 = new TextView(this);
+        tvQ4 = new TextView(this);
+        tvQ5 = new TextView(this);
         rgp = new RadioGroup(this);
         et3 = new EditText(this);
+        et5 = new EditText(this);
+        btnSubmit = new Button(this);
 
         rgp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -91,13 +103,14 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(10, 10, 10, 0);
+
 
                 if (data != null) {
 
                     // Q1
                     if (data.get(0).getType().equals("multipleChoice")) {
                         tvQ1.setText(data.get(0).getId() + ". " + data.get(0).getQuestion());
-                        params.setMargins(10, 10, 10, 0);
                         tvQ1.setLayoutParams(params);
                         linearLayout.addView(tvQ1);
 
@@ -108,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                             rbn.setText(data.get(0).getOptionsList().get(i).getValue());
                             rgp.addView(rbn);
                         }
-                        params.setMargins(10, 0, 10, 0);
                         rgp.setLayoutParams(params);
                         linearLayout.addView(rgp);
                     }
@@ -117,11 +129,9 @@ public class MainActivity extends AppCompatActivity {
                     // Q2
                     if (data.get(1).getType().equals("textInput")) {
                         tvQ2.setText(data.get(1).getId() + ". " + data.get(1).getQuestion());
-                        params.setMargins(10, 10, 10, 0);
                         tvQ2.setLayoutParams(params);
                         linearLayout.addView(tvQ2);
 
-                        params.setMargins(10, 10, 10, 0);
                         et3.setLayoutParams(params);
                         et3.setHint("Enter Address");
                         linearLayout.addView(et3);
@@ -131,11 +141,11 @@ public class MainActivity extends AppCompatActivity {
                     // Q3
                     if (data.get(2).getType().equals("dropdown")) {
                         tvQ3.setText(data.get(2).getId() + ". " + data.get(2).getQuestion());
-                        params.setMargins(10, 10, 10, 0);
                         tvQ3.setLayoutParams(params);
                         linearLayout.addView(tvQ3);
 
                         ArrayList<String> stringList = new ArrayList<String>();
+                        stringList.add("Select");
                         for (int i = 0; i < data.get(2).getOptionsList().size(); i++) {
                             stringList.add(data.get(2).getOptionsList().get(i).getValue());
                         }
@@ -143,12 +153,47 @@ public class MainActivity extends AppCompatActivity {
                         adapter.setDropDownViewResource(
                                 android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(adapter);
-                        params.setMargins(10, 10, 10, 0);
                         spinner.setLayoutParams(params);
                         linearLayout.addView(spinner);
+                    }
 
+
+                    // Q4
+                    if (data.get(3).getType().equals("checkbox")) {
+                        tvQ4.setText(data.get(3).getId() + ". " + data.get(3).getQuestion());
+                        tvQ4.setLayoutParams(params);
+                        linearLayout.addView(tvQ4);
+
+                        for (int i = 0; i < data.get(3).getOptionsList().size(); i++) {
+                                CheckBox cb = new CheckBox(getApplicationContext());
+                                cb.setText(data.get(3).getOptionsList().get(i).getValue());
+                            cb.setLayoutParams(params);
+                            linearLayout.addView(cb);
+                        }
 
                     }
+
+
+                    // Q5
+                    if (data.get(4).getType().equals("numberInput")) {
+                        tvQ5.setText(data.get(4).getId() + ". " + data.get(4).getQuestion());
+                        params.setMargins(10, 10, 10, 0);
+                        tvQ5.setLayoutParams(params);
+                        linearLayout.addView(tvQ5);
+
+                        params.setMargins(10, 10, 10, 0);
+                        et5.setLayoutParams(params);
+                        et5.setHint("Enter Amount");
+                        et5.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        linearLayout.addView(et5);
+                    }
+
+
+                    // Save Button
+                    params.setMargins(10, 10, 10, 0);
+                    btnSubmit.setLayoutParams(params);
+                    btnSubmit.setText("Save");
+                    linearLayout.addView(btnSubmit);
 
 
                 }
