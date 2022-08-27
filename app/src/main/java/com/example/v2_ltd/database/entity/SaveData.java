@@ -29,7 +29,10 @@ public class SaveData {
     private String whatHappned;
 
     @ColumnInfo(name = "solve")
-    private int solve;
+    private String solve;
+
+    @ColumnInfo(name = "amount")
+    private String amount;
 
     public int getId() {
         return Id;
@@ -71,11 +74,19 @@ public class SaveData {
         this.whatHappned = whatHappned;
     }
 
-    public int getSolve() {
+    public String getSolve() {
         return solve;
     }
 
-    public void setSolve(int solve) {
+    public void setSolve(String solve) {
         this.solve = solve;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 }

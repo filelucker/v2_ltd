@@ -25,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
 }
 
 dependencies {
@@ -45,5 +46,8 @@ dependencies {
     //room DB
     implementation "androidx.room:room-runtime:2.2.6"
     annotationProcessor "androidx.room:room-compiler:2.2.6"
+//    implementation "com.karumi:dexter:5.0.0"
+//    implementation 'com.github.yalantis:ucrop:2.2.2'
+
 
 }
